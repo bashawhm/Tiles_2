@@ -1,0 +1,10 @@
+[package]
+name = "Tiles_2"
+version = "0.1.0"
+authors = ["Hunter Bashaw <hunter@blivet.sh>"]
+edition = "2018"
+
+[dependencies.sdl2]
+default-features = false
+git = "https://github.com/AngryLawyer/rust-sdl2"
+features = ["image", "gfx"]
