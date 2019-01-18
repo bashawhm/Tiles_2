@@ -8,10 +8,10 @@ static NAME: &str = "Tiles 2";
 const WIDTH: u32 = 800;
 const HEIGHT: u32 = 600;
 static FPS: u32 = 60;
-const TILE_NUM_WIDTH: usize = 16;
-const TILE_NUM_HEIGHT: usize = 12;
-const TILE_SCREEN_WIDTH: usize = 800;
-const TILE_SCREEN_HEIGHT: usize = HEIGHT as usize - (2 * (HEIGHT as f64 / TILE_NUM_HEIGHT as f64) as usize);
+const HORIZ_TILE_NUM: usize = 16;
+const VERT_TILE_NUM: usize = 12;
+const GAME_AREA_WIDTH: usize = 800;
+const GAME_AREA_HEIGHT: usize = HEIGHT as usize - (2 * (HEIGHT as f64 / VERT_TILE_NUM as f64) as usize);
 
 
 enum EventCode {
@@ -110,8 +110,8 @@ fn main() {
         canvas: canvas,
         event_pump: sdl_context.event_pump().unwrap(),
         fps_manager: sdl2::gfx::framerate::FPSManager::new(),
-        tiles: (0..TILE_NUM_WIDTH).map(|_| Vec::with_capacity(TILE_NUM_HEIGHT)).collect::<Vec<Vec<_>>>(),
-        legend:(0..TILE_NUM_WIDTH).map(|_| Vec::with_capacity(TILE_NUM_WIDTH - TILE_NUM_HEIGHT)).collect::<Vec<Vec<_>>>(), 
+        tiles: (0..HORIZ_TILE_NUM).map(|_| Vec::with_capacity(VERT_TILE_NUM)).collect::<Vec<Vec<_>>>(),
+        legend:(0..HORIZ_TILE_NUM).map(|_| Vec::with_capacity(HORIZ_TILE_NUM - VERT_TILE_NUM)).collect::<Vec<Vec<_>>>(), 
         textures: Vec::new(),
         click_mode: ClickMode::Off,
     };
@@ -126,17 +126,17 @@ fn main() {
 
 
     for i in 0..stage.tiles.len() {
-        for j in 0..TILE_NUM_HEIGHT {
+        for j in 0..VERT_TILE_NUM {
             stage.tiles[i].push(Tile {
-                rect: sdl2::rect::Rect::new((i as f64 * (TILE_SCREEN_WIDTH as f64 / TILE_NUM_WIDTH as f64)).round() as i32, (j as f64 * (TILE_SCREEN_HEIGHT as f64 / TILE_NUM_HEIGHT as f64)).round() as i32, (TILE_SCREEN_WIDTH as f64 / TILE_NUM_WIDTH as f64).round() as u32, (TILE_SCREEN_HEIGHT as f64 / TILE_NUM_HEIGHT as f64).round() as u32),
+                rect: sdl2::rect::Rect::new((i as f64 * (GAME_AREA_WIDTH as f64 / HORIZ_TILE_NUM as f64)).round() as i32, (j as f64 * (GAME_AREA_HEIGHT as f64 / VERT_TILE_NUM as f64)).round() as i32, (GAME_AREA_WIDTH as f64 / HORIZ_TILE_NUM as f64).round() as u32, (GAME_AREA_HEIGHT as f64 / VERT_TILE_NUM as f64).round() as u32),
                 tile_state: TileState::Tile as u64,
             });
         }
     }
     for i in 0..stage.legend.len() {
-        for j in 0..(TILE_NUM_WIDTH - TILE_NUM_HEIGHT) {
+        for j in 0..(HORIZ_TILE_NUM - VERT_TILE_NUM) {
             stage.legend[i].push(Tile {
-                rect: sdl2::rect::Rect::new((i as f64 * (TILE_SCREEN_WIDTH as f64 / TILE_NUM_WIDTH as f64)).round() as i32, ((j as f64 * (TILE_SCREEN_HEIGHT as f64 / TILE_NUM_HEIGHT as f64)).round() as i32) + TILE_SCREEN_HEIGHT as i32, (TILE_SCREEN_WIDTH as f64 / TILE_NUM_WIDTH as f64).round() as u32, (TILE_SCREEN_HEIGHT as f64 / TILE_NUM_HEIGHT as f64).round() as u32),
+                rect: sdl2::rect::Rect::new((i as f64 * (GAME_AREA_WIDTH as f64 / HORIZ_TILE_NUM as f64)).round() as i32, ((j as f64 * (GAME_AREA_HEIGHT as f64 / VERT_TILE_NUM as f64)).round() as i32) + GAME_AREA_HEIGHT as i32, (GAME_AREA_WIDTH as f64 / HORIZ_TILE_NUM as f64).round() as u32, (GAME_AREA_HEIGHT as f64 / VERT_TILE_NUM as f64).round() as u32),
                 tile_state: TileState::Legend as u64,
             });
         }
